@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 12:26:28 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/08 13:18:14 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:46:09 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ main()
 
 	this finds the correct paths using envp and store them in an array
 	the array wil look like this: ["/bin/cat", "/usr/bin/head", "usr/bin/wc"]
+	we parse through the entire path and split it using ft_split and the colon as the delimiter
+	This way we can find the correct shell command somewhere in the path
 
 //	ft_parse_args()
 
