@@ -6,15 +6,16 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:17:05 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/08 13:17:59 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/15 13:41:08 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
-	int fd;
+	int f1;
+	int	f2;
 
 	if (argc != 5)
 	{
@@ -23,10 +24,11 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		fd = open("example.txt", O_WRONLY | O_CREAT);
-		dup2(fd, STDOUT_FILENO);
-		clode(fd);
-		ft_printf("Example print in example.txt\n");
+		f1 = open(argv[1], O_RDONLY);
+		f2 = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
+		if (f1 || f2 < 0)
+			return (-1);
+		pipex(f1, f2, argv, envp);
 	}
 	return (0);
 }

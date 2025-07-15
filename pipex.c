@@ -6,11 +6,62 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 12:26:28 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/14 14:39:55 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:41:23 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	pipex(int f1, int f2, char **argv, char **envp)
+{
+	int		end[2];
+	pid_t	parent;
+
+	pipe(end);
+	parent = fork();
+	if (parent = -1)
+		return (perror("fork"));
+	else if (parent = 0)
+		child_process(f1, argv[2], argv, envp);
+	else
+		parent_process(f2, argv[3], argv, envp);
+}
+
+void	child_process(int f1, char *cmd1, char **argv, char **envp)
+{
+	close(f2);
+	dup2(f1, STDIN_FILENO);//f1 to be execve input
+	dup2(end[1], STDOUT_FILENO);
+	close(end[0]);
+	close(f1);
+	//execve function for each possible path
+	exit(EXIT_SUCCESS);
+	cmd = ft_parse_cmds(cmd1, envp);
+	execve(cmd, ft_parse_args(argv), envp);
+	if (execve = -1)
+		return (perror("child"));
+	free(cmd);
+	return(EXIT_FAILURE);
+}
+
+void	parent_process(int f2, char *cmd2, char **argv, char **envp)
+{
+	int	status;
+
+	waitpid(-1, &status, 0);
+	close(f1);
+	dup2(f2, STDOUT_FILENO);
+	dup2(end[0], STDIN_FILENO);
+	close(end[1]);
+	close(f2);
+	//execve function for each possible path
+	cmd = ft_parse_cmds(cmd2, envp);
+	execve(cmd, ft_parse_args(argv), envp);
+	if (execve = -1)
+		return (perror("parent"));
+	free(cmd);
+	return (EXIT_FAILURE);
+}
 
 //NOTES
 
