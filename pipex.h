@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 12:49:48 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/08 12:54:56 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/17 16:26:40 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,13 @@ typedef struct	s_pipex
 	char	***cmd_args;
 	int		cmd_count;
 }	t_pipex;
+
+int	main(int argc, char **argv, char **envp);
+char	**ft_parse_args(char **av);
+int	newstrlen(char **envp, char *start, char c);
+int	ft_parse_cmds(char *cmd, char **envp);
+void	pipex(int f1, int f2, char **argv, char **envp);
+void	child_process(int f1, char *cmd1, char **argv, char **envp);
+void	parent_process(int f2, char *cmd2, char **argv, char **envp);
 
 #endif
