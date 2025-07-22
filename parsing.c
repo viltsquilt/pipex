@@ -6,62 +6,68 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:15:13 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/22 13:39:42 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/22 18:27:19 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	**ft_parse_args(char **av)
+char	**ft_parse_args(char *av)
 {
-	t_pipex	pipex;
+	char **args;
 
-	pipex.mycmdargs = ft_split(av[2], ' ');//malloc
-	if (!pipex.mycmdargs)
-		return (perror("mycmdargs"), NULL);
-	return (pipex.mycmdargs);
+	args = ft_split(av, ' ');//malloc
+	if (!args)
+		return (perror("args"), NULL);
+	return (args);
 }
 
-int	newstrlen(char **envp, int start, char c)
+int	newstrlen(char *envp, char c)
 {
-	int	len;
 	int	i;
 
-	i = start;
+	i = 0;
 	while (envp[i])
 	{
-		if (*envp[i] == c)
+		if (envp[i] == c)
 			break;
 		i++;
 	}
-	len = i - start;
-	return (len);
+	return (i);
 }
 
-char	*ft_parse_cmds(char *cmd, char **envp)
+int	ft_parse_cmds(char *cmd, char *av, char **envp)
 {
 	t_pipex	pipex;
-	int		start;
 	char	*s;
 	int		len;
 	int		i;
+	int		j;
 
 	i = 0;
+	j = 0;
 	s = "PATH";
-	len = ft_strlen(*envp);
-	start = findstart(*envp, s, len);
-	len = newstrlen(envp, start, '\n');
-	pipex.path = ft_substr(*envp, start, len); //malloc
-	if (!pipex.path)
-		perror("path");
-	pipex.mypaths = ft_split(pipex.path, ':'); //malloc
-	if (!pipex.mypaths)
-		return (free(pipex.path), NULL);
-	while (pipex.mypaths[i])
+	while (envp[i])
 	{
-		if (ft_strcmp(pipex.mypaths[i], cmd) == 0)
-			return (pipex.mypaths[i]);
+		if (ft_strncmp(envp[i], s, 4) == 0)
+			break;
 		i++;
 	}
-	return (0);
+	len = newstrlen(envp[i], '\n');
+	pipex.mypaths = ft_split(envp[i], ':'); //malloc
+	if (!pipex.mypaths)
+		return (free(pipex.path), -1);
+	pipex.mycmdargs = ft_parse_args(av);
+	while (pipex.mypaths[j])
+	{
+		cmd = ft_strjoin(pipex.mypaths[j], av);
+		execve(cmd, pipex.mycmdargs, envp);
+		perror("Error");
+		free(cmd);
+		j++;
+//		if (ft_strcmp(pipex.mypaths[j], cmd) == 0)
+//			return (pipex.mypaths[j]);
+//		j++;
+	}
+	return (-1);
 }

@@ -6,12 +6,12 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 12:47:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/22 13:56:00 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:33:01 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
+/*
 int	findstart(const char *big, const char *little, size_t len)
 {
 	const char	*needle;
@@ -42,7 +42,7 @@ int	findstart(const char *big, const char *little, size_t len)
 	}
 	return (0);
 }
-
+*/
 int ft_strcmp(const char *s1, const char *s2)
 {
     size_t          i;

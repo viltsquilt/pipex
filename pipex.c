@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 12:26:28 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/22 13:50:35 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/22 18:28:07 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@ void	ft_pipex(t_pipex pipex, char **argv, char **envp)
 {
 	pid_t	parent;
 
-	pipe(pipex.end);
+	if (pipe(pipex.end) == -1)
+		return (perror("pipe"));
 	parent = fork();
 	if (parent == -1)
 		return (perror("fork"));
-	else if (parent == 0)
+	if (parent == 0)
 		child_process(pipex.f1, argv[2], argv, envp);
-	else
+	if (parent > 0)
 		parent_process(pipex.f2, argv[3], argv, envp);
 }
 
@@ -37,10 +38,10 @@ void	child_process(int f1, char *cmd, char **argv, char **envp)
 	close(f1);
 	//execve function for each possible path
 	exit(EXIT_SUCCESS);
-	pipex.cmd1 = ft_parse_cmds(cmd, envp);
-	if (execve(pipex.cmd1, ft_parse_args(argv), envp) == -1)
-		perror("child");
-	free(pipex.cmd1);
+	ft_parse_cmds(cmd, argv[2], envp);
+//	if (execve(pipex.cmd1, ft_parse_args(argv), envp) == -1)
+//		perror("child");
+//	free(pipex.cmd1);
 }
 
 void	parent_process(int f2, char *cmd, char **argv, char **envp)
@@ -55,10 +56,10 @@ void	parent_process(int f2, char *cmd, char **argv, char **envp)
 	close(pipex.end[1]);
 	close(f2);
 	//execve function for each possible path
-	pipex.cmd2 = ft_parse_cmds(cmd, envp);
-	if (execve(pipex.cmd2, ft_parse_args(argv), envp) == -1)
-		perror("parent");
-	free(pipex.cmd2);
+	ft_parse_cmds(cmd, argv[3], envp);
+//	if (execve(pipex.cmd2, ft_parse_args(argv), envp) == -1)
+//		perror("parent");
+//	free(pipex.cmd2);
 }
 
 //NOTES
