@@ -6,61 +6,59 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 12:26:28 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/15 15:41:23 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/22 13:50:35 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	pipex(int f1, int f2, char **argv, char **envp)
+void	ft_pipex(t_pipex pipex, char **argv, char **envp)
 {
-	int		end[2];
 	pid_t	parent;
 
-	pipe(end);
+	pipe(pipex.end);
 	parent = fork();
-	if (parent = -1)
+	if (parent == -1)
 		return (perror("fork"));
-	else if (parent = 0)
-		child_process(f1, argv[2], argv, envp);
+	else if (parent == 0)
+		child_process(pipex.f1, argv[2], argv, envp);
 	else
-		parent_process(f2, argv[3], argv, envp);
+		parent_process(pipex.f2, argv[3], argv, envp);
 }
 
-void	child_process(int f1, char *cmd1, char **argv, char **envp)
+void	child_process(int f1, char *cmd, char **argv, char **envp)
 {
-	close(f2);
+	t_pipex	pipex;
+
+	close(pipex.f2);
 	dup2(f1, STDIN_FILENO);//f1 to be execve input
-	dup2(end[1], STDOUT_FILENO);
-	close(end[0]);
+	dup2(pipex.end[1], STDOUT_FILENO);
+	close(pipex.end[0]);
 	close(f1);
 	//execve function for each possible path
 	exit(EXIT_SUCCESS);
-	cmd = ft_parse_cmds(cmd1, envp);
-	execve(cmd, ft_parse_args(argv), envp);
-	if (execve = -1)
-		return (perror("child"));
-	free(cmd);
-	return(EXIT_FAILURE);
+	pipex.cmd1 = ft_parse_cmds(cmd, envp);
+	if (execve(pipex.cmd1, ft_parse_args(argv), envp) == -1)
+		perror("child");
+	free(pipex.cmd1);
 }
 
-void	parent_process(int f2, char *cmd2, char **argv, char **envp)
+void	parent_process(int f2, char *cmd, char **argv, char **envp)
 {
 	int	status;
+	t_pipex	pipex;
 
 	waitpid(-1, &status, 0);
-	close(f1);
+	close(pipex.f1);
 	dup2(f2, STDOUT_FILENO);
-	dup2(end[0], STDIN_FILENO);
-	close(end[1]);
+	dup2(pipex.end[0], STDIN_FILENO);
+	close(pipex.end[1]);
 	close(f2);
 	//execve function for each possible path
-	cmd = ft_parse_cmds(cmd2, envp);
-	execve(cmd, ft_parse_args(argv), envp);
-	if (execve = -1)
-		return (perror("parent"));
-	free(cmd);
-	return (EXIT_FAILURE);
+	pipex.cmd2 = ft_parse_cmds(cmd, envp);
+	if (execve(pipex.cmd2, ft_parse_args(argv), envp) == -1)
+		perror("parent");
+	free(pipex.cmd2);
 }
 
 //NOTES

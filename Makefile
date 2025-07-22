@@ -6,14 +6,14 @@
 #    By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/07 11:48:33 by vahdekiv          #+#    #+#              #
-#    Updated: 2025/07/17 15:24:32 by vahdekiv         ###   ########.fr        #
+#    Updated: 2025/07/22 14:03:04 by vahdekiv         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I libft/
-SRCS = main.c parsing.c pipex.c
+CFLAGS = -Wall -Wextra -Werror -I libft/ -g
+SRCS = main.c parsing.c pipex.c utils.c
 
 OBJS = $(SRCS:.c=.o)
 

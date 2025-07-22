@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:17:05 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/15 13:41:08 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/22 13:51:50 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	int f1;
-	int	f2;
+	t_pipex	pipex;
 
 	if (argc != 5)
 	{
@@ -24,11 +23,11 @@ int main(int argc, char **argv, char **envp)
 	}
 	else
 	{
-		f1 = open(argv[1], O_RDONLY);
-		f2 = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
-		if (f1 || f2 < 0)
+		pipex.f1 = open(argv[1], O_RDONLY);
+		pipex.f2 = open(argv[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
+		if (pipex.f1 || pipex.f2 < 0)
 			return (-1);
-		pipex(f1, f2, argv, envp);
+		ft_pipex(pipex, argv, envp);
 	}
-	return (0);
+	return (EXIT_FAILURE);
 }
