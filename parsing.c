@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:15:13 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/22 18:27:19 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/23 16:32:12 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,11 @@ int	ft_parse_cmds(char *cmd, char *av, char **envp)
 	int		len;
 	int		i;
 	int		j;
+	int		k;
 
 	i = 0;
 	j = 0;
+	k = 0;
 	s = "PATH";
 	while (envp[i])
 	{
@@ -55,19 +57,21 @@ int	ft_parse_cmds(char *cmd, char *av, char **envp)
 	}
 	len = newstrlen(envp[i], '\n');
 	pipex.mypaths = ft_split(envp[i], ':'); //malloc
+	while (pipex.mypaths[k])
+	{
+		pipex.mypaths[k] = ft_join(pipex.mypaths[k], "/");
+		k++;
+	}
 	if (!pipex.mypaths)
 		return (free(pipex.path), -1);
 	pipex.mycmdargs = ft_parse_args(av);
 	while (pipex.mypaths[j])
 	{
-		cmd = ft_strjoin(pipex.mypaths[j], av);
+		cmd = ft_join(pipex.mypaths[j], av);
 		execve(cmd, pipex.mycmdargs, envp);
 		perror("Error");
 		free(cmd);
 		j++;
-//		if (ft_strcmp(pipex.mypaths[j], cmd) == 0)
-//			return (pipex.mypaths[j]);
-//		j++;
 	}
 	return (-1);
 }

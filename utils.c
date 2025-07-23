@@ -6,43 +6,33 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 12:47:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/22 17:33:01 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:33:13 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-/*
-int	findstart(const char *big, const char *little, size_t len)
-{
-	const char	*needle;
-	const char	*haystack;
-	size_t		i;
-	int			j;
 
-	if (!*little)
-		return (-1);
-	i = 0;
-	j = 0;
-	while (*big && len > 0)
+char	*ft_join(char const *s1, char const *s2)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*newstr;
+
+	if (s1 && s2)
 	{
-		haystack = big;
-		needle = little;
-		j++;
-		while (i < len && (*haystack == *needle))
-		{
-			needle++;
-			haystack++;
-			i++;
-		}
-		if (!*needle)
-			return (j);
-		i = 0;
-		big++;
-		len--;
+		len1 = ft_strlen(s1);
+		len2 = ft_strlen(s2);
+		newstr = malloc(len1 + len2 + 1);
+		if (!newstr)
+			return (NULL);
+		ft_memcpy(newstr, s1, len1);
+		ft_memcpy(newstr + len1, s2, len2);
+		newstr[len1 + len2] = '\0';
+		return ((char *) newstr);
 	}
-	return (0);
+	return (NULL);
 }
-*/
+
 int ft_strcmp(const char *s1, const char *s2)
 {
     size_t          i;
