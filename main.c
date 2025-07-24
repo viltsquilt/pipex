@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:17:05 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/24 16:12:57 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/24 18:12:07 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static int	ft_open(char **av, int index)
 	return (fd);
 }
 
-//    int execve(const char *pathname, char *const argv[], char *const envp[]);
 int	child_process(char **argv, char **envp, int *fds, int index)
 {
 	t_pipex	pipex;
@@ -50,9 +49,10 @@ int	child_process(char **argv, char **envp, int *fds, int index)
 	if (index == 0)
 	{
 		dup2(file[1], STDIN_FILENO);
-		dup2(fds[0], STDOUT_FILENO);
-		close(fds[0]);
+		dup2(fds[1], STDOUT_FILENO);
+		close(fds[1]);
 		close(file[0]);
+		close(fds[0]);
 		pipex.cmd = argv[2];
 		while (pipex.mypaths[i])
 		{
@@ -65,10 +65,11 @@ int	child_process(char **argv, char **envp, int *fds, int index)
 	}
 	else
 	{
-		dup2(fds[1], STDIN_FILENO);
+		dup2(fds[0], STDIN_FILENO);
 		dup2(file[0], STDOUT_FILENO);
-		close(fds[1]);
+		close(fds[0]);
 		close(file[1]);
+		close(fds[1]);
 		pipex.cmd = argv[3];
 		while (pipex.mypaths[i])
 		{
@@ -79,6 +80,9 @@ int	child_process(char **argv, char **envp, int *fds, int index)
 		}
 		execve(pipex.cmd, pipex.mycmdargs, envp);
 	}
+	free(pipex.cmd);
+	free(pipex.mycmdargs);
+	free(pipex.mypaths);
 	return (child);
 }
 
@@ -90,7 +94,7 @@ int main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 	{
-		write(2, "Error\n", 6);
+		write(2, "Required input: < file1 cmd1 | cmd2 > file2\n", 44);
 		return (1);
 	}
 	if (pipe(pipes) == -1)
