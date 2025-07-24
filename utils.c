@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 12:47:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/23 14:33:13 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/24 11:50:13 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,18 @@ int ft_strcmp(const char *s1, const char *s2)
         i++;
     }
     return (0);
+}
+
+int newstrlen(char *envp, char c)
+{
+	int i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if (envp[i] == c)
+			break;
+		i++;
+	}
+	return (i);
 }

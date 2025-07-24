@@ -6,12 +6,12 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 12:26:28 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/23 16:44:50 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/24 13:17:43 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-//fucked. Need pipes, pids, and fds in main
+/*
 void	ft_pipex(t_pipex pipex, char **argv, char **envp)
 {
 	pid_t	child1;
@@ -39,9 +39,9 @@ void	ft_pipex(t_pipex pipex, char **argv, char **envp)
 void	child1_process(t_pipex pipex, char *cmd, char **argv, char **envp)
 {
 	close(pipex.end[1]);
-	dup2(pipex.end[0], STDIN_FILENO);//end[0] to be execve input
-	dup2(pipex.end[1], STDOUT_FILENO);
-	close(pipex.end[0]);
+	dup2(pipex.fd[0], STDIN_FILENO);//end[0] to be execve input
+	dup2(pipex.fd[1], STDOUT_FILENO);
+	close(pipex.fd[0]);
 	//execve function for each possible path
 	ft_parse_cmds(cmd, argv[2], envp);
 	exit(EXIT_SUCCESS);
@@ -50,9 +50,9 @@ void	child1_process(t_pipex pipex, char *cmd, char **argv, char **envp)
 void	child2_process(t_pipex pipex, char *cmd, char **argv, char **envp)
 {
 	close(pipex.end[0]);
-	dup2(pipex.end[1], STDOUT_FILENO);
-	dup2(pipex.end[0], STDIN_FILENO);
-	close(pipex.end[1]);
+	dup2(pipex.fd[1], STDOUT_FILENO);
+	dup2(pipex.fd[0], STDIN_FILENO);
+	close(pipex.fd[1]);
 	//execve function for each possible path
 	ft_parse_cmds(cmd, argv[3], envp);
-}
+}*/
