@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 12:47:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/24 11:50:13 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/25 15:10:52 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,33 +33,33 @@ char	*ft_join(char const *s1, char const *s2)
 	return (NULL);
 }
 
-int ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    size_t          i;
-    unsigned char   *str1;
-    unsigned char   *str2;
+	size_t			i;
+	unsigned char	*str1;
+	unsigned char	*str2;
 
-    i = 0;
-    str1 = (unsigned char *) s1;
-    str2 = (unsigned char *) s2;
-    while (str1[i] || str2[i])
-    {
-        if (str1[i] != str2[i])
-            return (str1[i] - str2[i]);
-        i++;
-    }
-    return (0);
+	i = 0;
+	str1 = (unsigned char *) s1;
+	str2 = (unsigned char *) s2;
+	while (str1[i] || str2[i])
+	{
+		if (str1[i] != str2[i])
+			return (str1[i] - str2[i]);
+		i++;
+	}
+	return (0);
 }
 
-int newstrlen(char *envp, char c)
+int	newstrlen(char *envp, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (envp[i])
 	{
 		if (envp[i] == c)
-			break;
+			break ;
 		i++;
 	}
 	return (i);

@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:17:05 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/24 18:12:07 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/25 15:15:26 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,77 +19,73 @@ static int	ft_open(char **av, int index)
 	if (index == 0)
 		fd = open(av[1], O_RDONLY);
 	else
-		fd = open(av[4], O_CREAT | O_RDWR | O_TRUNC, 0644);
+		fd = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	return (fd);
 }
 
-int	child_process(char **argv, char **envp, int *fds, int index)
+static void	handle_files(t_pipex pipex, char **argv, int index)
 {
-	t_pipex	pipex;
-	int		file[2];
-	pid_t	child;
-	int		i;
+	if (index == 0)
+	{
+		dup2(pipex.file[0], STDIN_FILENO);
+		dup2(pipex.pipes[1], STDOUT_FILENO);
+		close(pipex.file[0]);
+		close(pipex.pipes[1]);
+		pipex.cmd = argv[2];
+	}
+	else
+	{
+		dup2(pipex.pipes[0], STDIN_FILENO);
+		dup2(pipex.file[1], STDOUT_FILENO);
+		close(pipex.pipes[0]);
+		close(pipex.file[1]);
+		pipex.cmd = argv[3];
+	}
+}
+
+static void	run_child(char **argv, char **envp, t_pipex pipex, int index)
+{
+	int	i;
 
 	i = 0;
 	pipex.mycmdargs = ft_parse_args(argv[index + 1 * 2]);
 	pipex.mypaths = ft_parse_cmds(envp);
-	file[0] = ft_open(argv, index);
-	if (!file[0])
-		exit(-1);
-	file[1] = ft_open(argv, index);
-	if (!file[1])
+	close(pipex.pipes[index]);
+	handle_files(pipex, argv, index);
+	while (pipex.mypaths[i])
 	{
-		close(file[0]);
-		exit(-1);
+		pipex.cmd = ft_join(pipex.mypaths[i], pipex.mycmdargs[0]);
+		if (access(pipex.cmd, X_OK) == 0)
+			break ;
+		i++;
 	}
-	child = fork();
-	if (child == -1)
-		return (perror("fork"), -1);
-	close(fds[index]);
-	if (index == 0)
-	{
-		dup2(file[1], STDIN_FILENO);
-		dup2(fds[1], STDOUT_FILENO);
-		close(fds[1]);
-		close(file[0]);
-		close(fds[0]);
-		pipex.cmd = argv[2];
-		while (pipex.mypaths[i])
-		{
-			pipex.cmd = ft_join(pipex.mypaths[i], pipex.mycmdargs[0]);
-			if (access(pipex.cmd, X_OK) == 0)
-				break;
-			i++;
-		}
-		execve(pipex.cmd, pipex.mycmdargs, envp);
-	}
-	else
-	{
-		dup2(fds[0], STDIN_FILENO);
-		dup2(file[0], STDOUT_FILENO);
-		close(fds[0]);
-		close(file[1]);
-		close(fds[1]);
-		pipex.cmd = argv[3];
-		while (pipex.mypaths[i])
-		{
-			pipex.cmd = ft_join(pipex.mypaths[i], pipex.mycmdargs[0]);
-			if (access(pipex.cmd, X_OK) == 0)
-				break;
-			i++;
-		}
-		execve(pipex.cmd, pipex.mycmdargs, envp);
-	}
+	execve(pipex.cmd, pipex.mycmdargs, envp);
 	free(pipex.cmd);
 	free(pipex.mycmdargs);
 	free(pipex.mypaths);
+}
+
+int	child_process(char **argv, char **envp, t_pipex pipex, int index)
+{
+	pid_t	child;
+
+	child = fork();
+	if (child == -1)
+		return (perror("fork"), -1);
+	if (child == 0)
+	{
+		pipex.file[index] = ft_open(argv, index);
+		if (!pipex.file[index])
+			exit(-1);
+		run_child(argv, envp, pipex, index);
+	}
 	return (child);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	pid_t	child[2];
-	int		pipes[2];
+	t_pipex	pipex;
 	int		status;
 
 	if (argc != 5)
@@ -97,12 +93,12 @@ int main(int argc, char **argv, char **envp)
 		write(2, "Required input: < file1 cmd1 | cmd2 > file2\n", 44);
 		return (1);
 	}
-	if (pipe(pipes) == -1)
+	if (pipe(pipex.pipes) == -1)
 		return (perror("pipe"), -1);
-	child[0] = child_process(argv, envp, pipes, 0);
-	child[1] = child_process(argv, envp, pipes, 1);
-	close(pipes[0]);
-	close(pipes[1]);
+	child[0] = child_process(argv, envp, pipex, 0);
+	child[1] = child_process(argv, envp, pipex, 1);
+	close(pipex.pipes[0]);
+	close(pipex.pipes[1]);
 	waitpid(child[0], &status, 0);
 	waitpid(child[1], &status, 0);
 	if (WIFEXITED(status))
