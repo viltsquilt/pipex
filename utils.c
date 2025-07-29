@@ -6,13 +6,13 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 12:47:03 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/25 15:10:52 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/29 13:40:34 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*ft_join(char const *s1, char const *s2)
+char	*ft_join(char *s1, char *s2)
 {
 	size_t	len1;
 	size_t	len2;
@@ -62,5 +62,32 @@ int	newstrlen(char *envp, char c)
 			break ;
 		i++;
 	}
+	return (i);
+}
+
+void	ft_free(char **arg)
+{
+	int	i;
+	int	index;
+
+	i = 0;
+	index = 0;
+	while (arg[index])
+		index++;
+	while (i <= index)
+	{
+		free(arg[i]);
+		i++;
+	}
+	free(arg);
+}
+
+int	countwords(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+		i++;
 	return (i);
 }

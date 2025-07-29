@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:15:13 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/25 15:18:50 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/29 13:22:18 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,32 @@ char	**ft_parse_args(char *av)
 char	**ft_parse_cmds(char **envp)
 {
 	t_pipex	pipex;
-	int		i;
-	int		j;
-	int		k;
 
-	i = 0;
-	j = 0;
-	k = 0;
+	pipex.index = 0;
 	pipex.string = "PATH";
-	while (envp[i])
+	while (envp[pipex.index])
 	{
-		if (ft_strncmp(envp[i], pipex.string, 4) == 0)
+		if (ft_strncmp(envp[pipex.index], pipex.string, 4) == 0)
 			break ;
-		i++;
+		pipex.index++;
 	}
-	pipex.len = newstrlen(envp[i], '\n');
-	pipex.mypaths = ft_split(envp[i], ':');
-	while (pipex.mypaths[k])
+	pipex.len = newstrlen(envp[pipex.index], '\n');
+	pipex.mysplit = ft_split(envp[pipex.index], ':');
+	pipex.index = 0;
+	pipex.mypaths = malloc((countwords(pipex.mysplit) + 1) * sizeof(char *));
+	if (!pipex.mypaths)
+		return (ft_free(pipex.mysplit), NULL);
+	while (pipex.mysplit[pipex.index])
 	{
-		pipex.mypaths[k] = ft_join(pipex.mypaths[k], "/");
-		if (!pipex.mypaths[k])
-			return (free(pipex.mypaths[k]), NULL);
-		k++;
+		pipex.mypaths[pipex.index] = ft_join(pipex.mysplit[pipex.index], "/");
+		if (!pipex.mypaths[pipex.index])
+		{
+			free(pipex.mypaths);
+			ft_free(pipex.mysplit);
+			return (NULL);
+		}
+		pipex.index++;
 	}
+	ft_free(pipex.mysplit);
 	return (pipex.mypaths);
 }

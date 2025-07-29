@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:17:05 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/25 15:15:26 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/29 13:31:20 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,21 @@ static void	run_child(char **argv, char **envp, t_pipex pipex, int index)
 	pipex.mypaths = ft_parse_cmds(envp);
 	close(pipex.pipes[index]);
 	handle_files(pipex, argv, index);
-	while (pipex.mypaths[i])
+	if (pipex.mypaths)
 	{
-		pipex.cmd = ft_join(pipex.mypaths[i], pipex.mycmdargs[0]);
-		if (access(pipex.cmd, X_OK) == 0)
-			break ;
-		i++;
+		while (pipex.mypaths[i])
+		{
+			pipex.cmd = ft_join(pipex.mypaths[i], pipex.mycmdargs[0]);
+			if (access(pipex.cmd, X_OK) == 0)
+				break ;
+			free(pipex.cmd);
+			i++;
+		}
+		execve(pipex.cmd, pipex.mycmdargs, envp);
+		free(pipex.cmd);
+		ft_free(pipex.mypaths);
 	}
-	execve(pipex.cmd, pipex.mycmdargs, envp);
-	free(pipex.cmd);
-	free(pipex.mycmdargs);
-	free(pipex.mypaths);
+	ft_free(pipex.mycmdargs);
 }
 
 int	child_process(char **argv, char **envp, t_pipex pipex, int index)
@@ -102,6 +106,6 @@ int	main(int argc, char **argv, char **envp)
 	waitpid(child[0], &status, 0);
 	waitpid(child[1], &status, 0);
 	if (WIFEXITED(status))
-		return (WIFEXITED(status));
+		return (WEXITSTATUS(status));
 	return (1);
 }
