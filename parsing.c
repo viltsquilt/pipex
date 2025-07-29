@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:15:13 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/29 13:22:18 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/29 13:47:41 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ char	**ft_parse_cmds(char **envp)
 	pipex.mysplit = ft_split(envp[pipex.index], ':');
 	pipex.index = 0;
 	pipex.mypaths = malloc((countwords(pipex.mysplit) + 1) * sizeof(char *));
+//	pipex.mypaths needs to be null-terminated and this function cleaned up
 	if (!pipex.mypaths)
 		return (ft_free(pipex.mysplit), NULL);
 	while (pipex.mysplit[pipex.index])
