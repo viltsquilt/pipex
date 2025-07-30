@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 12:49:48 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/29 13:17:10 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/30 11:52:10 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		main(int argc, char **argv, char **envp);
 int		ft_strcmp(const char *s1, const char *s2);
 int		countwords(char **arr);
 char	**ft_parse_args(char *av);
+char	**buildpath(t_pipex *pipex);
 char	*ft_join(char *s1, char *s2);
 int		newstrlen(char *envp, char c);
 char	**ft_parse_cmds(char **envp);

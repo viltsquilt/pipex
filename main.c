@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:17:05 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/29 13:31:20 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/30 11:12:03 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	main(int argc, char **argv, char **envp)
 	t_pipex	pipex;
 	int		status;
 
+	status = 0;
 	if (argc != 5)
 	{
 		write(2, "Required input: < file1 cmd1 | cmd2 > file2\n", 44);
