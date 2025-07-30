@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 13:17:05 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/30 11:12:03 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/30 14:08:27 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,25 @@ static int	ft_open(char **av, int index)
 	int	fd;
 
 	if (index == 0)
+	{
 		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
+		{
+			close(fd);
+			ft_printf("No such file or directory\n");
+			exit (1);
+		}
+	}
 	else
+	{
 		fd = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if (fd == -1)
+		{
+			close(fd);
+			ft_printf("No such file or directory\n");
+			exit (1);
+		}
+	}
 	return (fd);
 }
 
@@ -60,13 +76,15 @@ static void	run_child(char **argv, char **envp, t_pipex pipex, int index)
 			if (access(pipex.cmd, X_OK) == 0)
 				break ;
 			free(pipex.cmd);
+			pipex.cmd = NULL;
 			i++;
 		}
-		execve(pipex.cmd, pipex.mycmdargs, envp);
-		free(pipex.cmd);
+		if (pipex.cmd)
+			execve(pipex.cmd, pipex.mycmdargs, envp);
 		ft_free(pipex.mypaths);
 	}
 	ft_free(pipex.mycmdargs);
+	exit (127);
 }
 
 int	child_process(char **argv, char **envp, t_pipex pipex, int index)
@@ -75,12 +93,10 @@ int	child_process(char **argv, char **envp, t_pipex pipex, int index)
 
 	child = fork();
 	if (child == -1)
-		return (perror("fork"), -1);
+		return (perror("fork"), 1);
 	if (child == 0)
 	{
 		pipex.file[index] = ft_open(argv, index);
-		if (!pipex.file[index])
-			exit(-1);
 		run_child(argv, envp, pipex, index);
 	}
 	return (child);
@@ -98,8 +114,10 @@ int	main(int argc, char **argv, char **envp)
 		write(2, "Required input: < file1 cmd1 | cmd2 > file2\n", 44);
 		return (1);
 	}
+	if (!*argv[2] || !*argv[3])
+		exit (1);
 	if (pipe(pipex.pipes) == -1)
-		return (perror("pipe"), -1);
+		return (perror("pipe"), 1);
 	child[0] = child_process(argv, envp, pipex, 0);
 	child[1] = child_process(argv, envp, pipex, 1);
 	close(pipex.pipes[0]);

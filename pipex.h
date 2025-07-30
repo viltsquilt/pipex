@@ -6,7 +6,7 @@
 /*   By: vahdekiv <vahdekiv@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 12:49:48 by vahdekiv          #+#    #+#             */
-/*   Updated: 2025/07/30 11:52:10 by vahdekiv         ###   ########.fr       */
+/*   Updated: 2025/07/30 14:15:55 by vahdekiv         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,6 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include "libft/libft.h"
-
-typedef enum e_bool
-{
-	false,
-	true
-}	t_bool;
 
 typedef struct s_pipex
 {
